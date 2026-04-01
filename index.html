@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+:root {
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --color-text-primary: #1f2937;
+  --color-text-secondary: #6b7280;
+  --color-text-tertiary: #9ca3af;
+  --color-background-primary: #ffffff;
+  --color-background-secondary: #f3f4f6;
+  --color-border-secondary: #d1d5db;
+  --color-border-tertiary: #e5e7eb;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-sans, sans-serif); }
+
+.header { padding: 1.2rem 1rem 0.8rem; display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+.header-text { flex: 1; }
+.title { font-size: 18px; font-weight: 500; color: var(--color-text-primary); outline: none; }
+.subtitle { font-size: 13px; color: var(--color-text-secondary); margin-top: 4px; outline: none; }
+.title:focus, .subtitle:focus { border-bottom: 1px dashed var(--color-border-secondary); }
+
+.edit-hint { font-size: 11px; color: var(--color-text-tertiary); padding: 2px 8px; border: 0.5px solid var(--color-border-tertiary); border-radius: 10px; white-space: nowrap; flex-shrink: 0; margin-top: 4px; }
+
+.legend { display: flex; flex-wrap: wrap; gap: 8px; padding: 0 1rem 0.5rem; }
+.legend-item { display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--color-text-secondary); }
+.legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+.ld-r { background: #7F77DD; } .ld-w { background: #1D9E75; } .ld-c { background: #BA7517; } .ld-s { background: #D4537E; }
+
+.progress-label { font-size: 11px; color: var(--color-text-secondary); text-align: right; padding: 0 1rem 0.6rem; }
+.progress-bar { height: 4px; background: var(--color-border-tertiary); border-radius: 2px; margin: 0 1rem 1rem; }
+.progress-fill { height: 100%; border-radius: 2px; background: linear-gradient(90deg, #7F77DD, #1D9E75); transition: width 0.3s; }
+
+.timeline { display: flex; gap: 8px; padding: 0 1rem 1rem; align-items: stretch; }
+.phase { flex: 1; min-width: 0; }
+.phase-header { padding: 8px 10px 6px; border-radius: 8px 8px 0 0; font-size: 12px; font-weight: 500; outline: none; }
+.phase-header:focus { opacity: 0.8; }
+.ph-now .phase-header { background: #EEEDFE; color: #3C3489; }
+.ph-mid .phase-header { background: #E1F5EE; color: #085041; }
+.ph-final .phase-header { background: #FAEEDA; color: #633806; }
+
+.phase-body { border: 0.5px solid var(--color-border-tertiary); border-top: none; border-radius: 0 0 8px 8px; padding: 8px; display: flex; flex-direction: column; gap: 6px; }
+
+.task-card { border-radius: 8px; padding: 7px 9px 7px 26px; border: 0.5px solid transparent; position: relative; cursor: grab; user-select: none; }
+.task-card [contenteditable] { user-select: text; cursor: text; }
+.task-card:hover .task-delete { opacity: 1; }
+.task-card:hover .drag-handle { opacity: 0.7; }
+.task-card.done { background: #F1EFE8 !important; border-color: #B4B2A9 !important; }
+.task-card.done .task-title { text-decoration: line-through; color: #888780; }
+.task-card.done .task-note { color: #B4B2A9; }
+.task-card.done .cat-badge { opacity: 0.45; }
+.task-card.dragging { opacity: 0.35; cursor: grabbing; }
+.task-card.drop-before { box-shadow: 0 -3px 0 0 #7F77DD; }
+.task-card.drop-after  { box-shadow: 0  3px 0 0 #7F77DD; }
+
+.drag-handle { position: absolute; left: 6px; top: 50%; transform: translateY(-50%); width: 14px; display: flex; flex-direction: column; gap: 2.5px; align-items: center; opacity: 0.3; transition: opacity 0.15s; cursor: grab; padding: 2px; pointer-events: none; }
+.drag-handle span { display: block; width: 10px; height: 1.5px; background: var(--color-text-tertiary); border-radius: 1px; }
+
+.phase-body.drop-target { background: #f5f3ff; }
+.drop-zone { height: 4px; border-radius: 2px; margin: 1px 0; transition: height 0.15s, background 0.15s; }
+.drop-zone.active { height: 28px; background: #EEEDFE; border: 1.5px dashed #AFA9EC; border-radius: 6px; }
+
+.cat-recruit { background: #F3F0FE; border-color: #AFA9EC; }
+.cat-workshop { background: #E3F7F0; border-color: #5DCAA5; }
+.cat-content { background: #FFF3E5; border-color: #FAC775; }
+.cat-sns { background: #FCEEF4; border-color: #ED93B1; }
+
+.task-top { display: flex; align-items: flex-start; gap: 6px; }
+.task-check { width: 14px; height: 14px; border-radius: 3px; border: 1.5px solid var(--color-border-secondary); flex-shrink: 0; margin-top: 2px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+.task-check.checked { background: var(--color-text-secondary); border-color: var(--color-text-secondary); }
+.task-check.checked::after { content: ''; width: 8px; height: 5px; border-left: 1.5px solid #fff; border-bottom: 1.5px solid #fff; transform: rotate(-45deg) translateY(-1px); display: block; }
+
+.task-title { font-size: 12px; font-weight: 500; color: var(--color-text-primary); line-height: 1.4; flex: 1; outline: none; cursor: text; }
+.task-title:focus { border-bottom: 1px dashed var(--color-border-secondary); }
+.task-note { font-size: 11px; color: var(--color-text-secondary); margin-top: 3px; line-height: 1.4; padding-left: 20px; outline: none; cursor: text; }
+.task-note:focus { border-bottom: 1px dashed var(--color-border-tertiary); }
+.task-note:empty::before { content: attr(data-placeholder); color: var(--color-text-tertiary); pointer-events: none; }
+
+.cat-badge { display: inline-flex; align-items: center; gap: 3px; font-size: 10px; padding: 1px 5px; border-radius: 4px; font-weight: 500; cursor: pointer; }
+.badge-recruit { background: #CECBF6; color: #3C3489; }
+.badge-workshop { background: #9FE1CB; color: #085041; }
+.badge-content { background: #FAC775; color: #633806; }
+.badge-sns { background: #F4C0D1; color: #72243E; }
+
+.task-footer { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; margin-top: 4px; padding-left: 20px; }
+.assignee-badge { display: inline-flex; align-items: center; gap: 3px; font-size: 10px; padding: 1px 7px 1px 4px; border-radius: 10px; font-weight: 500; cursor: pointer; border: 0.5px solid transparent; }
+.assignee-badge.hidden { display: none; }
+.assignee-add { font-size: 10px; color: var(--color-text-tertiary); cursor: pointer; padding: 1px 4px; border-radius: 10px; border: 0.5px dashed var(--color-border-tertiary); }
+.assignee-add:hover { border-color: var(--color-border-secondary); color: var(--color-text-secondary); }
+.av { width: 14px; height: 14px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 8px; font-weight: 500; flex-shrink: 0; }
+.a-kurumu  { background: #EEEDFE; border-color: #AFA9EC; color: #3C3489; } .a-kurumu .av { background: #7F77DD; color: #fff; }
+.a-nicca   { background: #FAECE7; border-color: #F0997B; color: #712B13; } .a-nicca .av { background: #D85A30; color: #fff; }
+.a-chisan  { background: #E1F5EE; border-color: #5DCAA5; color: #085041; } .a-chisan .av { background: #1D9E75; color: #fff; }
+.a-karuf   { background: #FAEEDA; border-color: #EF9F27; color: #633806; } .a-karuf .av { background: #BA7517; color: #fff; }
+.a-takeme  { background: #FBEAF0; border-color: #ED93B1; color: #72243E; } .a-takeme .av { background: #D4537E; color: #fff; }
+
+.task-delete { position: absolute; top: 5px; right: 6px; width: 16px; height: 16px; border-radius: 50%; background: var(--color-background-secondary); border: 0.5px solid var(--color-border-secondary); font-size: 10px; display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: 0; transition: opacity 0.15s; color: var(--color-text-secondary); line-height: 1; }
+.task-delete:hover { background: #FCEBEB; border-color: #F09595; color: #A32D2D; }
+
+.add-task-btn { display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--color-text-tertiary); padding: 5px 4px; cursor: pointer; border-radius: 6px; border: none; background: none; width: 100%; }
+.add-task-btn:hover { background: var(--color-background-secondary); color: var(--color-text-secondary); }
+
+.add-form { display: none; flex-direction: column; gap: 6px; padding: 8px; background: var(--color-background-secondary); border-radius: 8px; border: 0.5px solid var(--color-border-tertiary); }
+.add-form.open { display: flex; }
+.add-form input, .add-form textarea { font-size: 12px; padding: 5px 8px; border-radius: 6px; border: 0.5px solid var(--color-border-tertiary); background: var(--color-background-primary); color: var(--color-text-primary); font-family: inherit; width: 100%; resize: none; }
+.add-form textarea { height: 40px; }
+.add-form select { font-size: 11px; padding: 4px 6px; border-radius: 6px; border: 0.5px solid var(--color-border-tertiary); background: var(--color-background-primary); color: var(--color-text-primary); font-family: inherit; }
+.add-form-btns { display: flex; gap: 6px; justify-content: flex-end; }
+.btn-add-confirm { font-size: 11px; padding: 4px 10px; border-radius: 6px; border: 0.5px solid #AFA9EC; background: #EEEDFE; color: #3C3489; cursor: pointer; }
+.btn-add-cancel { font-size: 11px; padding: 4px 10px; border-radius: 6px; border: 0.5px solid var(--color-border-tertiary); background: none; color: var(--color-text-secondary); cursor: pointer; }
+
+.real-section { margin: 0 1rem 1rem; border: 0.5px solid var(--color-border-tertiary); border-radius: 12px; overflow: hidden; }
+.real-header { padding: 8px 12px; background: #E3F7F0; display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
+.real-header-title { font-size: 13px; font-weight: 500; color: #085041; }
+.real-header-sub { font-size: 11px; color: #0F6E56; }
+.real-body { padding: 10px 12px; display: none; }
+.real-body.open { display: block; }
+.real-steps { display: flex; flex-direction: column; gap: 6px; }
+.real-step { display: flex; gap: 8px; align-items: flex-start; padding: 6px 8px; background: var(--color-background-secondary); border-radius: 8px; }
+.step-num { width: 18px; height: 18px; border-radius: 50%; background: #9FE1CB; color: #085041; font-size: 10px; font-weight: 500; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.step-text { font-size: 12px; color: var(--color-text-primary); line-height: 1.4; outline: none; }
+.step-hint { font-size: 11px; color: var(--color-text-secondary); margin-top: 2px; outline: none; }
+.toggle-arrow { font-size: 11px; color: #0F6E56; }
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-text">
+    <div class="title" contenteditable="true">iPad Garden 第4期 準備ロードマップ</div>
+    <div class="subtitle" contenteditable="true">5月の募集開始まで｜リアル講座も並行して進める</div>
+  </div>
+  <div style="display:flex;gap:6px;flex-shrink:0;margin-top:4px;">
+    <div class="edit-hint">クリックで編集</div>
+    <button onclick="saveHTML()" style="font-size:11px;padding:2px 10px;border-radius:10px;border:0.5px solid #5DCAA5;background:#E1F5EE;color:#085041;cursor:pointer;">💾 保存</button>
+  </div>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot ld-r"></div>集客・認知</div>
+  <div class="legend-item"><div class="legend-dot ld-w"></div>リアル講座</div>
+  <div class="legend-item"><div class="legend-dot ld-c"></div>コンテンツ</div>
+  <div class="legend-item"><div class="legend-dot ld-s"></div>SNS発信</div>
+</div>
+
+<div class="progress-label" id="prog-label">完了: 0 / 21</div>
+<div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+
+<div class="timeline">
+
+  <div class="phase ph-now">
+    <div class="phase-header" contenteditable="true">📌 今すぐ（4月前半）</div>
+    <div class="phase-body" id="phase1" data-drop-init="1">
+      <div class="task-card cat-workshop" data-id="t1">
+        <div class="drag-handle"><span></span><span></span><span></span></div><div class="task-delete" onclick="deleteTask(this)">×</div>
+        <div class="task-top">
+          <div class="task-check" onclick="toggleCheck(this)"></div>
+          <div class="task-title" contenteditable="true">リアル講座の日程・会場を確定</div>
+        </div>
+        <div class="task-note" contenteditable="true" data-placeholder="メモを追加…">4月中〜5月募集前までに1回開催</div>
+        <div class="task-footer"><div class="cat-badge badge-workshop" onclick="cycleBadge(this)">リアル講座</div><div class="assignee-add" onclick="addAssignee(this)">＋ 担当</div></div>
+      </div>
+      <div class="task-card cat-sns" data-id="t2">
+        <div class="drag-handle"><span></span><span></span><span></span></div><div class="task-delete" onclick="deleteTask(this)">×</div>
+        <div class="task-top">
+          <div class="task-check" onclick="toggleCheck(this)"></div>
+          <div class="task-title" contenteditable="true">SNSプロフィールを第4期仕様に更新</div>
+        </div>
+        <div class="task-note" contenteditable="true" data-placeholder="メモを追加…">「5月募集予定」を明記して期待感を醸成</div>
+        <div class="task-footer"><div class="cat-badge badge-sns" onclick="cycleBadge(this)">SNS発信</div><div class="assignee-add" onclick="addAssignee(this)">＋ 担当</div></div>
+      </div>
+      <div class="task-card cat-content" data-id="t3">
+        <div class="drag-handle"><span></span><span></span><span></span></div><div class="task-delete" onclick="deleteTask(this)">×</div>
+        <div class="task-top">
+          <div class="task-check" onclick="toggleCheck(this)"></div>
+          <div class="task-title" contenteditable="true">3期の振り返り・実績をまとめる</div>
+        </div>
+        <div class="task-note" contenteditable="true" data-placeholder="メモを追加…">受講者の声・Before/Afterが集客コンテンツの核になる</div>
+        <div class="task-footer"><div class="cat-badge badge-content" onclick="cycleBadge(this)">コンテンツ</div><div class="assignee-add" onclick="addAssignee(this)">＋ 担当</div></div>
+      </div>
+      <div class="task-card cat-recruit" data-id="t4">
+        <div class="drag-handle"><span></span><span></span><span></span></div><div class="task-delete" onclick="deleteTask(this)">×</div>
+        <div class="task-top">
+          <div class="task-check" onclick="toggleCheck(this)"></div>
+          <div class="task-title" contenteditable="true">集客戦略の方針を決める</div>
+        </div>
+        <div class="task-note" contenteditable="true" data-placeholder="メモを追加…">紹介 / SNS / リアル講座 からの導線を整理</div>
+        <div class="task-footer"><div class="cat-badge badge-recruit" onclick="cycleBadge(this)">集客・認知</div><div class="assignee-add" onclick="addAssignee(this)">＋ 担当</div></div>
+      </div>
+      <div class="task-card cat-recruit" data-id="t16">
+        <div class="drag-handle"><span></span><span></span><span></span></div><div class="task-delete" onclick="deleteTask(this)">×</div>
+        <div class="task-top">
+          <div class="task-check" onclick="toggleCheck(this)"></div>
+          <div class="task-title" contenteditable="true">個別相談を計画表に入れるか決定</div>
+        </div>
+        <div class="task-note" contenteditable="true" data-placeholder="メモを追加…">くろむさんと確認・方針を決めてMTGで報告</div>
+        <div class="task-footer"><div class="cat-badge badge-recruit" onclick="cycleBadge(this)">集客・認知</div><div class="assignee-add" onclick="addAssignee(this)">＋ 担当</div></div>
+      </div>
+      <div class="task-card cat-content" data-id="t17">
+        <div class="drag-handle"><span></span><span></span><span></span></div><div class="task-delete" onclick="deleteTask(this)">×</div>
+        <div class="task-top">
+          <div class="task-check" onclick="toggleCheck(this)"></div>
+          <div class="task-title" contenteditable="true">4／8MTG</div>
+        </div>
+        <div class="task-note" contenteditable="true" data-placeholder="メモを追加…">HP更新・バナー・勉強会の状況を共有</div>
+        <div class="task-footer"><div class="cat-badge badge-content" onclick="cycleBadge(this)">コンテンツ</div><div class="assignee-add" onclick="addAssignee(this)">＋ 担当</div></div>
+      </div>
+      <div class="task-card cat-workshop" data-id="tc21"><div class="drag-handle"><span></span><span></span><span></span></div><div class="task-delete" onclick="deleteTask(this)">×</div><div class="task-top"><div class="task-check" onclick="toggleCheck(this)"></div><div class="task-title" contenteditable="true">リアル講座集客方法精査</div></div><div class="task-note" contenteditable="true" data-placeholder="メモを追加…">Instagram<br>開催地域での広告<br>Google広告</div><div class="task-footer"><div class="cat-badge badge-workshop" onclick="cycleBadge(this)">リアル講座</div><div class="assignee-add" onclick="addAssignee(this)">＋ 担当</div></div></div><div id="add-form-phase1" class="add-form">
+        <input id="new-title-phase1" type="text" placeholder="タスク名">
+        <textarea id="new-note-phase1" placeholder="メモ（任意）"></textarea>
+        <select id="new-cat-phase1">
+          <option value="recruit">集客・認知</option>
+          <option value="workshop">リアル講座</option>
+          <option value="content">コンテンツ</option>
+          <option value="sns">SNS発信</option>
+        </select>
+        <div class="add-form-btns">
+          <button class="btn-add-cancel" onclick="closeForm('phase1')">キャンセル</button>
+          <button class="btn-add-confirm" onclick="addTask('phase1')">追加</button>
+        </div>
+      </div>
+      <button class="add-task-btn" onclick="openForm('phase1')">＋ タスクを追加</button>
+    </div>
+  </div>
+
+  <div class="phase ph-mid">
+    <div class="phase-header" contenteditable="true">🌿 中盤（4月後半）</div>
+    <div class="phase-body" id="phase2" data-drop-init="1">
+      <div class="task-card cat-workshop" data-id="t5">
+        <div class="drag-handle"><span></span><span></span><span></span></div><div class="task-delete" onclick="deleteTask(this)">×</div>
+        <div class="task-top">
+          <div class="task-check" onclick="toggleCheck(this)"></div>
+          <div class="task-title" contenteditable="true">リアル講座を実施（1回）</div>
+        </div>
+        <div class="task-note" contenteditable="true" data-placeholder="メモを追加…">参加者をコミュニティ予告の見込み客に</div>
+        <div class="task-footer"><div class="cat-badge badge-workshop" onclick="cycleBadge(this)">リアル講座</div><div class="assignee-add" onclick="addAssignee(this)">＋ 担当</div></div>
+      </div>
+      <div class="task-card cat-recruit" data-id="t18">
+        <div class="drag-handle"><span></span><span></span><span></span></div><div class="task-delete" onclick="deleteTask(this)">×</div>
+        <div class="task-top">
+          <div class="task-check" onclick="toggleCheck(this)"></div>
+          <div class="task-title" contenteditable="true">HP更新「5月より4期募集開始」</div>
+        </div>
+        <div class="task-note" contenteditable="true" data-placeholder="メモを追加…">chi-sanと作業・リアル勉強会の予定も掲載</div>
+        <div class="task-footer"><div class="cat-badge badge-recruit" onclick="cycleBadge(this)">集客・認知</div><div class="assignee-badge a-chisan" data-member="chisan" onclick="this.remove()" title="クリックで削除"><span class="av">c</span>chi_san</div><div class="assignee-add" onclick="addAssignee(this)">＋ 担当</div></div>
+      </div>
+      <div class="task-card cat-sns" data-id="t19">
+        <div class="drag-handle"><span></span><span></span><span></span></div><div class="task-delete" onclick="deleteTask(this)">×</div>
+        <div class="task-top">
+          <div class="task-check" onclick="toggleCheck(this)"></div>
+          <div class="task-title" contenteditable="true">三連バナー作成（くろむさん）</div>
+        </div>
+        <div class="task-footer"><div class="cat-badge badge-sns" onclick="cycleBadge(this)">SNS発信</div><div class="assignee-badge a-kurumu" data-member="kurumu" onclick="this.remove()" title="クリックで削除"><span class="av">く</span>くろむ</div><div class="assignee-badge a-nicca" data-member="nicca" title="クリックで削除"><span class="av">N</span>Nicca</div><div class="assignee-add" onclick="addAssignee(this)">＋ 担当</div></div>
+      </div>
+      <div class="task-card cat-sns" data-id="t6">
+        <div class="drag-handle"><span></span><span></span><span></span></div><div class="task-delete" onclick="deleteTask(this)">×</div>
+        <div class="task-top">
+          <div class="task-check" onclick="toggleCheck(this)"></div>
+          <div class="task-title" contenteditable="true">週3以上の発信リズムを確立</div>
+        </div>
+        <div class="task-note" contenteditable="true" data-placeholder="メモを追加…">iPad活用tips・コミュニティの魅力・講座レポ</div>
+        <div class="task-footer"><div class="cat-badge badge-sns" onclick="cycleBadge(this)">SNS発信</div><div class="assignee-add" onclick="addAssignee(this)">＋ 担当</div></div>
+      </div>
+      <div class="task-card cat-content" data-id="t7">
+        <div class="drag-handle"><span></span><span></span><span></span></div><div class="task-delete" onclick="deleteTask(this)">×</div>
+        <div class="task-top">
+          <div class="task-check" onclick="toggleCheck(this)"></div>
+          <div class="task-title" contenteditable="true">第4期の教材・カリキュラム案を作成</div>
+        </div>
+        <div class="task-note" contenteditable="true" data-placeholder="メモを追加…">3期の改善点を反映した内容にアップデート</div>
+        <div class="task-footer"><div class="cat-badge badge-content" onclick="cycleBadge(this)">コンテンツ</div><div class="assignee-add" onclick="addAssignee(this)">＋ 担当</div></div>
+      </div>
+      <div class="task-card cat-recruit" data-id="t8">
+        <div class="drag-handle"><span></span><span></span><span></span></div><div class="task-delete" onclick="deleteTask(this)">×</div>
+        <div class="task-top">
+          <div class="task-check" onclick="toggleCheck(this)"></div>
+          <div class="task-title" contenteditable="true">「先行リスト」の仕組みを作る</div>
+        </div>
+        <div class="task-note" contenteditable="true" data-placeholder="メモを追加…">LINE・メルマガ等で早期申込者を集めておく</div>
+        <div class="task-footer"><div class="cat-badge badge-recruit" onclick="cycleBadge(this)">集客・認知</div><div class="assignee-add" onclick="addAssignee(this)">＋ 担当</div></div>
+      </div>
+      <div class="task-card cat-recruit" data-id="t9">
+        <div class="drag-handle"><span></span><span></span><span></span></div><div class="task-delete" onclick="deleteTask(this)">×</div>
+        <div class="task-top">
+          <div class="task-check" onclick="toggleCheck(this)"></div>
+          <div class="task-title" contenteditable="true">リアル講座参加者にコミュニティを案内</div>
+        </div>
+        <div class="task-note" contenteditable="true" data-placeholder="メモを追加…">体験 → 興味喚起 → 申込の流れを設計</div>
+        <div class="task-footer"><div class="cat-badge badge-recruit" onclick="cycleBadge(this)">集客・認知</div><div class="assignee-add" onclick="addAssignee(this)">＋ 担当</div></div>
+      </div>
+      <div class="task-card cat-recruit" data-id="t20">
+        <div class="drag-handle"><span></span><span></span><span></span></div>
+        <div class="task-delete" onclick="deleteTask(this)">×</div>
+        <div class="task-top">
+          <div class="task-check" onclick="toggleCheck(this)"></div>
+          <div class="task-title" contenteditable="true">エルメッセージ×Stripeのステップ配信を構築</div>
+        </div>
+        <div class="task-note" contenteditable="true" data-placeholder="メモを追加…">LINE経由で4期決済への案内シナリオを設計・連携・テストまで</div>
+        <div class="task-footer"><div class="cat-badge badge-recruit" onclick="cycleBadge(this)">集客・認知</div><div class="assignee-add" onclick="addAssignee(this)">＋ 担当</div></div>
+      </div>
+      <div id="add-form-phase2" class="add-form">
+        <input id="new-title-phase2" type="text" placeholder="タスク名">
+        <textarea id="new-note-phase2" placeholder="メモ（任意）"></textarea>
+        <select id="new-cat-phase2">
+          <option value="recruit">集客・認知</option>
+          <option value="workshop">リアル講座</option>
+          <option value="content">コンテンツ</option>
+          <option value="sns">SNS発信</option>
+        </select>
+        <div class="add-form-btns">
+          <button class="btn-add-cancel" onclick="closeForm('phase2')">キャンセル</button>
+          <button class="btn-add-confirm" onclick="addTask('phase2')">追加</button>
+        </div>
+      </div>
+      <button class="add-task-btn" onclick="openForm('phase2')">＋ タスクを追加</button>
+    </div>
+  </div>
+
+  <div class="phase ph-final">
+    <div class="phase-header" contenteditable="true">🚀 直前（5月）</div>
+    <div class="phase-body" id="phase3" data-drop-init="1">
+      <div class="task-card cat-recruit" data-id="t10">
+        <div class="drag-handle"><span></span><span></span><span></span></div><div class="task-delete" onclick="deleteTask(this)">×</div>
+        <div class="task-top">
+          <div class="task-check" onclick="toggleCheck(this)"></div>
+          <div class="task-title" contenteditable="true">募集ページ・セールス文章を完成</div>
+        </div>
+        <div class="task-note" contenteditable="true" data-placeholder="メモを追加…">実績・受講者の声・Q&amp;Aを入れ込む</div>
+        <div class="task-footer"><div class="cat-badge badge-recruit" onclick="cycleBadge(this)">集客・認知</div><div class="assignee-add" onclick="addAssignee(this)">＋ 担当</div></div>
+      </div>
+      <div class="task-card cat-sns" data-id="t11">
+        <div class="drag-handle"><span></span><span></span><span></span></div><div class="task-delete" onclick="deleteTask(this)">×</div>
+        <div class="task-top">
+          <div class="task-check" onclick="toggleCheck(this)"></div>
+          <div class="task-title" contenteditable="true">募集開始の「カウントダウン発信」</div>
+        </div>
+        <div class="task-note" contenteditable="true" data-placeholder="メモを追加…">あと◯日・残席◯席の演出で緊急性をつくる</div>
+        <div class="task-footer"><div class="cat-badge badge-sns" onclick="cycleBadge(this)">SNS発信</div><div class="assignee-add" onclick="addAssignee(this)">＋ 担当</div></div>
+      </div>
+      <div class="task-card cat-content" data-id="t12">
+        <div class="drag-handle"><span></span><span></span><span></span></div><div class="task-delete" onclick="deleteTask(this)">×</div>
+        <div class="task-top">
+          <div class="task-check" onclick="toggleCheck(this)"></div>
+          <div class="task-title" contenteditable="true">特典・ボーナスコンテンツを用意</div>
+        </div>
+        <div class="task-note" contenteditable="true" data-placeholder="メモを追加…">早期申込特典や限定資料で背中を押す</div>
+        <div class="task-footer"><div class="cat-badge badge-content" onclick="cycleBadge(this)">コンテンツ</div><div class="assignee-add" onclick="addAssignee(this)">＋ 担当</div></div>
+      </div>
+      <div class="task-card cat-recruit" data-id="t13">
+        <div class="drag-handle"><span></span><span></span><span></span></div><div class="task-delete" onclick="deleteTask(this)">×</div>
+        <div class="task-top">
+          <div class="task-check" onclick="toggleCheck(this)"></div>
+          <div class="task-title" contenteditable="true">先行リストへの案内メッセージを送る</div>
+        </div>
+        <div class="task-note" contenteditable="true" data-placeholder="メモを追加…">公式募集の24〜48時間前に先行案内</div>
+        <div class="task-footer"><div class="cat-badge badge-recruit" onclick="cycleBadge(this)">集客・認知</div><div class="assignee-add" onclick="addAssignee(this)">＋ 担当</div></div>
+      </div>
+      <div class="task-card cat-workshop" data-id="t14">
+        <div class="drag-handle"><span></span><span></span><span></span></div><div class="task-delete" onclick="deleteTask(this)">×</div>
+        <div class="task-top">
+          <div class="task-check" onclick="toggleCheck(this)"></div>
+          <div class="task-title" contenteditable="true">募集直前にリアル勉強会（1回）</div>
+        </div>
+        <div class="task-note" contenteditable="true" data-placeholder="メモを追加…">4期募集に効果的に活用。「次は入学してさらに深めよう」の導線に</div>
+        <div class="task-footer"><div class="cat-badge badge-workshop" onclick="cycleBadge(this)">リアル講座</div><div class="assignee-add" onclick="addAssignee(this)">＋ 担当</div></div>
+      </div>
+      <div class="task-card cat-sns" data-id="t15">
+        <div class="drag-handle"><span></span><span></span><span></span></div><div class="task-delete" onclick="deleteTask(this)">×</div>
+        <div class="task-top">
+          <div class="task-check" onclick="toggleCheck(this)"></div>
+          <div class="task-title" contenteditable="true">募集スタート・告知投稿を公開</div>
+        </div>
+        <div class="task-note" contenteditable="true" data-placeholder="メモを追加…">全チャネルで同時配信。DM・コメント対応も準備</div>
+        <div class="task-footer"><div class="cat-badge badge-sns" onclick="cycleBadge(this)">SNS発信</div><div class="assignee-add" onclick="addAssignee(this)">＋ 担当</div></div>
+      </div>
+      <div id="add-form-phase3" class="add-form">
+        <input id="new-title-phase3" type="text" placeholder="タスク名">
+        <textarea id="new-note-phase3" placeholder="メモ（任意）"></textarea>
+        <select id="new-cat-phase3">
+          <option value="recruit">集客・認知</option>
+          <option value="workshop">リアル講座</option>
+          <option value="content">コンテンツ</option>
+          <option value="sns">SNS発信</option>
+        </select>
+        <div class="add-form-btns">
+          <button class="btn-add-cancel" onclick="closeForm('phase3')">キャンセル</button>
+          <button class="btn-add-confirm" onclick="addTask('phase3')">追加</button>
+        </div>
+      </div>
+      <button class="add-task-btn" onclick="openForm('phase3')">＋ タスクを追加</button>
+    </div>
+  </div>
+
+</div>
+
+<div class="real-section">
+  <div class="real-header" onclick="toggleReal()">
+    <div>
+      <div class="real-header-title">🌿 リアル講座（ワークショップ）の設計ポイント</div>
+      <div class="real-header-sub">コミュニティ募集への効果的な接続方法</div>
+    </div>
+    <div class="toggle-arrow" id="real-arrow">▼ 開く</div>
+  </div>
+  <div class="real-body" id="real-body">
+    <div class="real-steps">
+      <div class="real-step"><div class="step-num">1</div><div><div class="step-text" contenteditable="true">参加者が「次のステップ」を自然に欲しがる設計にする</div><div class="step-hint" contenteditable="true">講座の最後に「もっと学びたい人はコミュニティへ」の橋渡しを</div></div></div>
+      <div class="real-step"><div class="step-num">2</div><div><div class="step-text" contenteditable="true">参加者の「iPad活用の悩み」をリサーチする場にもする</div><div class="step-hint" contenteditable="true">次期コンテンツ・教材作りに直結するインサイトが得られる</div></div></div>
+      <div class="real-step"><div class="step-num">3</div><div><div class="step-text" contenteditable="true">写真・動画をSNS素材として活用する</div><div class="step-hint" contenteditable="true">参加者の顔が見える投稿はコミュニティの温度感を伝える最強コンテンツ</div></div></div>
+      <div class="real-step"><div class="step-num">4</div><div><div class="step-text" contenteditable="true">終了後にアンケート＋受講者の声を回収する</div><div class="step-hint" contenteditable="true">募集ページの「声」として使うことを最初から想定して質問を設計</div></div></div>
+      <div class="real-step"><div class="step-num">5</div><div><div class="step-text" contenteditable="true">コミュニティの「先行案内」を手渡しで伝える</div><div class="step-hint" contenteditable="true">リアルで会った人は信頼度が高い。LINE登録やメルマガ登録へ誘導</div></div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const catMap = {
+  recruit: { cls: 'cat-recruit', badge: 'badge-recruit', label: '集客・認知' },
+  workshop: { cls: 'cat-workshop', badge: 'badge-workshop', label: 'リアル講座' },
+  content: { cls: 'cat-content', badge: 'badge-content', label: 'コンテンツ' },
+  sns: { cls: 'cat-sns', badge: 'badge-sns', label: 'SNS発信' }
+};
+const catOrder = ['recruit', 'workshop', 'content', 'sns'];
+let taskCounter = 21;
+
+// ─── チェック・削除・バッジ ──────────────────────────────────────
+function toggleCheck(el) {
+  const card = el.closest('.task-card');
+  el.classList.toggle('checked');
+  card.classList.toggle('done', el.classList.contains('checked'));
+  updateProgress();
+  autoSave();
+}
+
+function deleteTask(el) {
+  const card = el.closest('.task-card');
+  card.remove();
+  updateProgress();
+  autoSave();
+}
+
+function cycleBadge(el) {
+  const card = el.closest('.task-card');
+  const currentBadge = el.className.replace('cat-badge ', '').replace('badge-', '');
+  const currentCat = catOrder.find(c => catMap[c].badge === 'badge-' + currentBadge) || 'recruit';
+  const next = catMap[catOrder[(catOrder.indexOf(currentCat) + 1) % catOrder.length]];
+  card.className = 'task-card ' + next.cls;
+  el.className = 'cat-badge ' + next.badge;
+  el.textContent = next.label;
+  autoSave();
+}
+
+// ─── フォーム ────────────────────────────────────────────────
+function openForm(phase) {
+  document.getElementById('add-form-' + phase).classList.add('open');
+}
+function closeForm(phase) {
+  const form = document.getElementById('add-form-' + phase);
+  form.classList.remove('open');
+  document.getElementById('new-title-' + phase).value = '';
+  document.getElementById('new-note-' + phase).value = '';
+}
+
+function addTask(phase) {
+  const title = document.getElementById('new-title-' + phase).value.trim();
+  if (!title) return;
+  const note = document.getElementById('new-note-' + phase).value.trim();
+  // textareaの改行を<br>に変換して表示に反映
+  const noteHtml = note.replace(/\n/g, '<br>');
+  const cat = document.getElementById('new-cat-' + phase).value;
+  const info = catMap[cat];
+  taskCounter++;
+  const id = 'tc' + taskCounter;
+  const div = document.createElement('div');
+  div.className = 'task-card ' + info.cls;
+  div.dataset.id = id;
+  div.innerHTML = `<div class="drag-handle"><span></span><span></span><span></span></div><div class="task-delete" onclick="deleteTask(this)">×</div><div class="task-top"><div class="task-check" onclick="toggleCheck(this)"></div><div class="task-title" contenteditable="true">${title}</div></div><div class="task-note" contenteditable="true" data-placeholder="メモを追加…">${noteHtml}</div><div class="task-footer"><div class="cat-badge ${info.badge}" onclick="cycleBadge(this)">${info.label}</div><div class="assignee-add" onclick="addAssignee(this)">＋ 担当</div></div>`;
+  const body = document.getElementById(phase);
+  const form = document.getElementById('add-form-' + phase);
+  body.insertBefore(div, form);
+  initEditableHandlers();
+  closeForm(phase);
+  updateProgress();
+  autoSave();
+}
+
+function updateProgress() {
+  const all = document.querySelectorAll('.task-card');
+  const done = document.querySelectorAll('.task-card.done');
+  document.getElementById('prog-label').textContent = `完了: ${done.length} / ${all.length}`;
+  document.getElementById('prog-fill').style.width = all.length ? (done.length / all.length * 100) + '%' : '0%';
+}
+
+function toggleReal() {
+  const body = document.getElementById('real-body');
+  const arrow = document.getElementById('real-arrow');
+  const open = body.classList.toggle('open');
+  arrow.textContent = open ? '▲ 閉じる' : '▼ 開く';
+}
+
+// ─── ドラッグ ────────────────────────────────────────────────
+let dragSrc = null;
+let _ptrTarget = null;
+
+function _isInteractive(el) {
+  return !!(el.closest('[contenteditable]') ||
+            el.closest('.task-check') ||
+            el.closest('.task-delete') ||
+            el.closest('.cat-badge') ||
+            el.closest('.assignee-badge') ||
+            el.closest('.assignee-add') ||
+            el.closest('.assignee-menu'));
+}
+
+function _clearIndicators() {
+  document.querySelectorAll('.task-card').forEach(c => c.classList.remove('drop-before', 'drop-after'));
+  document.querySelectorAll('.phase-body').forEach(b => b.classList.remove('drop-target'));
+}
+
+// 後方互換のため残す（saveHTML から呼ばれる）
+function hideDropZones() { document.querySelectorAll('.drop-zone').forEach(z => z.remove()); }
+function showDropZones() {}
+
+function initDrag() {
+  // ── カード：ドラッグ元 & ドロップ先 ──
+  document.querySelectorAll('.task-card').forEach(card => {
+    if (card.dataset.dragInit) return;
+    card.dataset.dragInit = '1';
+    card.setAttribute('draggable', 'true');
+
+    card.addEventListener('mousedown', e => {
+      // インタラクティブな要素（テキスト編集・チェック等）の上では draggable を一時オフ
+      _ptrTarget = e.target;
+      card.draggable = !_isInteractive(e.target);
+    });
+    card.addEventListener('mouseup', () => { card.draggable = true; });
+
+    card.addEventListener('dragstart', e => {
+      dragSrc = card;
+      e.dataTransfer.effectAllowed = 'move';
+      // setTimeout でレンダリング後に半透明化（DOM変更を dragstart から切り離す）
+      setTimeout(() => card.classList.add('dragging'), 0);
+    });
+
+    card.addEventListener('dragend', () => {
+      card.classList.remove('dragging');
+      card.draggable = true;
+      dragSrc = null;
+      _ptrTarget = null;
+      _clearIndicators();
+      autoSave();
+    });
+
+    // ドロップ先としての振る舞い
+    card.addEventListener('dragover', e => {
+      if (!dragSrc || dragSrc === card) return;
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      _clearIndicators();
+      const mid = card.getBoundingClientRect().top + card.getBoundingClientRect().height / 2;
+      card.classList.add(e.clientY < mid ? 'drop-before' : 'drop-after');
+    });
+
+    card.addEventListener('dragleave', e => {
+      if (!card.contains(e.relatedTarget)) {
+        card.classList.remove('drop-before', 'drop-after');
+      }
+    });
+
+    card.addEventListener('drop', e => {
+      e.stopPropagation();
+      if (!dragSrc || dragSrc === card) return;
+      e.preventDefault();
+      const mid = card.getBoundingClientRect().top + card.getBoundingClientRect().height / 2;
+      if (e.clientY < mid) { card.before(dragSrc); } else { card.after(dragSrc); }
+      _clearIndicators();
+      initDrag();
+      updateProgress();
+    });
+  });
+
+  // ── phase-body：空の列 or カードの下の余白へのドロップ ──
+  document.querySelectorAll('.phase-body').forEach(body => {
+    if (body.dataset.dropInit) return;
+    body.dataset.dropInit = '1';
+
+    body.addEventListener('dragover', e => {
+      if (!dragSrc) return;
+      if (e.target.closest('.task-card')) return; // カード側で処理
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      _clearIndicators();
+      body.classList.add('drop-target');
+    });
+
+    body.addEventListener('dragleave', e => {
+      if (!body.contains(e.relatedTarget)) body.classList.remove('drop-target');
+    });
+
+    body.addEventListener('drop', e => {
+      if (!dragSrc) return;
+      if (e.target.closest('.task-card')) return;
+      e.preventDefault();
+      const addBtn = body.querySelector('.add-task-btn');
+      addBtn ? addBtn.before(dragSrc) : body.appendChild(dragSrc);
+      _clearIndicators();
+      initDrag();
+      updateProgress();
+    });
+  });
+}
+
+// ─── 担当者 ──────────────────────────────────────────────────
+const members = [
+  { key: 'kurumu', cls: 'a-kurumu', initial: 'く', label: 'くろむ' },
+  { key: 'nicca',  cls: 'a-nicca',  initial: 'N', label: 'Nicca' },
+  { key: 'chisan', cls: 'a-chisan', initial: 'c', label: 'chi_san' },
+  { key: 'karuf',  cls: 'a-karuf',  initial: 'カ', label: 'カルフ' },
+  { key: 'takeme', cls: 'a-takeme', initial: 'た', label: 'たけめがね' },
+];
+
+function addAssignee(btn) {
+  document.querySelectorAll('.assignee-menu').forEach(m => m.remove());
+  const footer = btn.closest('.task-footer');
+  const rect = btn.getBoundingClientRect();
+
+  const menu = document.createElement('div');
+  menu.className = 'assignee-menu';
+  menu.style.cssText = `position:fixed;z-index:9999;left:${rect.left}px;top:${rect.bottom + 4}px;background:#ffffff;border:0.5px solid #d1d5db;border-radius:8px;padding:4px;display:flex;flex-direction:column;gap:2px;min-width:120px;box-shadow:0 4px 12px rgba(0,0,0,0.12);`;
+
+  let closeMenu;
+
+  members.forEach(m => {
+    const alreadyAdded = footer.querySelector(`[data-member="${m.key}"]`);
+    const item = document.createElement('div');
+    item.style.cssText = `font-size:11px;padding:5px 8px;border-radius:6px;cursor:${alreadyAdded ? 'default' : 'pointer'};display:flex;align-items:center;gap:6px;color:${alreadyAdded ? '#9ca3af' : '#1f2937'};`;
+    const dotColor = { kurumu:'#7F77DD', nicca:'#D85A30', chisan:'#1D9E75', karuf:'#BA7517', takeme:'#D4537E' }[m.key];
+    item.innerHTML = `<span style="width:18px;height:18px;border-radius:50%;background:${dotColor};display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:500;color:#fff;flex-shrink:0;opacity:${alreadyAdded ? '0.4' : '1'};">${m.initial}</span>${m.label}${alreadyAdded ? ' ✓' : ''}`;
+    if (!alreadyAdded) {
+      item.onmouseover = () => item.style.background = '#f3f4f6';
+      item.onmouseout = () => item.style.background = '';
+    }
+    if (!alreadyAdded) {
+      item.addEventListener('mousedown', e => {
+        e.preventDefault();
+        e.stopPropagation();
+        addAssigneeBadge(footer, m);
+        menu.remove();
+        document.removeEventListener('mousedown', closeMenu);
+      });
+    }
+    menu.appendChild(item);
+  });
+
+  document.body.appendChild(menu);
+
+  closeMenu = e => {
+    if (!menu.contains(e.target)) { menu.remove(); document.removeEventListener('mousedown', closeMenu); }
+  };
+  setTimeout(() => document.addEventListener('mousedown', closeMenu), 10);
+}
+
+function addAssigneeBadge(footer, member) {
+  if (footer.querySelector(`[data-member="${member.key}"]`)) return;
+  const badge = document.createElement('div');
+  badge.className = `assignee-badge ${member.cls}`;
+  badge.dataset.member = member.key;
+  badge.innerHTML = `<span class="av">${member.initial}</span>${member.label}`;
+  badge.onclick = () => { badge.remove(); autoSave(); };
+  badge.title = 'クリックで削除';
+  footer.querySelector('.assignee-add').before(badge);
+  autoSave();
+}
+
+// ─── 自動保存（localStorage）──────────────────────────────────
+let autoSaveTimer = null;
+function autoSave() {
+  if (autoSaveTimer) clearTimeout(autoSaveTimer);
+  autoSaveTimer = setTimeout(() => {
+    try {
+      const data = {
+        v: 1,
+        timeline: document.querySelector('.timeline').innerHTML,
+        title: document.querySelector('.title').innerHTML,
+        subtitle: document.querySelector('.subtitle').innerHTML,
+        counter: taskCounter
+      };
+      localStorage.setItem('ipadGardenRoadmap', JSON.stringify(data));
+    } catch(e) {}
+  }, 600);
+}
+
+function loadSavedState() {
+  try {
+    const saved = localStorage.getItem('ipadGardenRoadmap');
+    if (!saved) return;
+    const data = JSON.parse(saved);
+    if (data.v !== 1) return;
+    if (data.timeline) document.querySelector('.timeline').innerHTML = data.timeline;
+    if (data.title) document.querySelector('.title').innerHTML = data.title;
+    if (data.subtitle) document.querySelector('.subtitle').innerHTML = data.subtitle;
+    if (data.counter) taskCounter = data.counter;
+  } catch(e) {}
+}
+
+// ─── 編集ハンドラー（メモ改行 & 自動保存）────────────────────────
+function initEditableHandlers() {
+  // メモ欄: Enterキーで改行（<br>を挿入）
+  document.querySelectorAll('.task-note').forEach(note => {
+    if (note.dataset.noteInit) return;
+    note.dataset.noteInit = '1';
+    note.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        document.execCommand('insertLineBreak');
+      }
+    });
+    note.addEventListener('input', () => autoSave());
+  });
+  // その他の編集可能要素: 変更を自動保存
+  document.querySelectorAll('[contenteditable="true"]').forEach(el => {
+    if (el.dataset.inputInit) return;
+    el.dataset.inputInit = '1';
+    el.addEventListener('input', () => autoSave());
+  });
+}
+
+// ─── 保存（ファイルダウンロード）─────────────────────────────────
+function saveHTML() {
+  hideDropZones();
+  // 実行時に付与した属性を除去（保存ファイルをクリーンに保つ）
+  document.querySelectorAll('.task-card').forEach(c => {
+    c.removeAttribute('data-drag-init');
+    c.removeAttribute('draggable');
+  });
+  document.querySelectorAll('[data-note-init]').forEach(el => el.removeAttribute('data-note-init'));
+  document.querySelectorAll('[data-input-init]').forEach(el => el.removeAttribute('data-input-init'));
+
+  // スタイルを<head>に移動し、UIが崩れないように正しいHTML構造で保存
+  const styles = [...document.querySelectorAll('style')].map(s => s.outerHTML).join('\n');
+  const bodyClone = document.body.cloneNode(true);
+  bodyClone.querySelectorAll('style').forEach(s => s.remove());
+
+  // スクリプト内のtaskCounterを現在の値に更新
+  const scriptEl = bodyClone.querySelector('script');
+  if (scriptEl) {
+    scriptEl.textContent = scriptEl.textContent.replace(/let taskCounter = \d+;/, `let taskCounter = ${taskCounter};`);
+  }
+
+  const html = `<!DOCTYPE html>\n<html lang="ja">\n<head>\n<meta charset="UTF-8">\n<meta name="viewport" content="width=device-width,initial-scale=1">\n${styles}\n</head>\n<body>\n${bodyClone.innerHTML}\n</body>\n</html>`;
+
+  const blob = new Blob([html], { type: 'text/html' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'ipad_garden_roadmap_editable.html';
+  a.click();
+  URL.revokeObjectURL(a.href);
+
+  // 除去した属性を再初期化
+  setTimeout(() => { initDrag(); initEditableHandlers(); }, 100);
+}
+
+// ─── 初期化 ──────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  loadSavedState();
+  initDrag();
+  initEditableHandlers();
+  updateProgress();
+});
+</script>
+
+</body>
+</html>
