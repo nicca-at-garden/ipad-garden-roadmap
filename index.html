@@ -825,7 +825,7 @@ body { font-family: var(--font-sans, sans-serif); }
         <div class="task-footer">
           <div class="cat-badge badge-sns" onclick="cycleBadge(this)">SNS発信</div>
           <div class="assignee-badge a-kurumu" data-member="kurumu" onclick="this.remove()"><span class="av">く</span>くろむ</div>
-          <div class="assignee-badge a-nicca" data-member="nicca" onclick="this.remove()"><span class="av">N</span>Nicca</div>
+          
           <div class="assignee-add" onclick="addAssignee(this)">＋ 担当</div>
         </div>
       </div>
@@ -992,6 +992,263 @@ body { font-family: var(--font-sans, sans-serif); }
   </div>
 </div>
 
-<script><br>let taskCounter = 23;<br>const members = [<br>  { key: 'kurumu', cls: 'a-kurumu', initial: 'く', label: 'くろむ' },<br>  { key: 'nicca',  cls: 'a-nicca',  initial: 'N', label: 'Nicca' },<br>  { key: 'chisan', cls: 'a-chisan', initial: 'c', label: 'chi_san' },<br>  { key: 'karuf',  cls: 'a-karuf',  initial: 'カ', label: 'カルフ' },<br>  { key: 'takeme', cls: 'a-takeme', initial: 'た', label: 'たけめがね' },<br>];<br><br>function toggleCheck(el) {<br>  const card = el.closest('.task-card');<br>  el.classList.toggle('checked');<br>  card.classList.toggle('done', el.classList.contains('checked'));<br>  updateProgress();<br>}<br><br>function deleteTask(el) {<br>  if(confirm('このタスクを削除しますか？')) {<br>    el.closest('.task-card').remove();<br>    updateProgress();<br>  }<br>}<br><br>function cycleBadge(el) {<br>  const card = el.closest('.task-card');<br>  const cats = ['recruit', 'workshop', 'content', 'sns'];<br>  const labels = ['集客・認知', 'リアル講座', 'コンテンツ', 'SNS発信'];<br>  let currentCat = cats.find(c => card.classList.contains('cat-' + c));<br>  let idx = cats.indexOf(currentCat);<br>  card.classList.remove('cat-' + currentCat);<br>  idx = (idx + 1) % cats.length;<br>  card.classList.add('cat-' + cats[idx]);<br>  el.className = 'cat-badge badge-' + cats[idx];<br>  el.textContent = labels[idx];<br>}<br><br>function openForm(phase) { document.getElementById('add-form-' + phase).classList.add('open'); }<br>function closeForm(phase) { document.getElementById('add-form-' + phase).classList.remove('open'); }<br><br>function addTask(phase) {<br>  const title = document.getElementById('new-title-' + phase).value;<br>  if (!title) return;<br>  taskCounter++;<br>  const note = document.getElementById('new-note-' + phase).value;<br>  const card = document.createElement('div');<br>  card.className = 'task-card cat-recruit';<br>  card.dataset.id = 'tc' + taskCounter;<br>  card.innerHTML = `<div class="drag-handle"><span></span><span></span><span></span></div><div class="task-delete" onclick="deleteTask(this)">×</div><div class="task-top"><div class="task-check" onclick="toggleCheck(this)"></div><div class="task-title" contenteditable="true">${title}</div></div><div class="task-note" contenteditable="true" data-placeholder="メモを追加…">${note}</div><div class="task-footer"><div class="cat-badge badge-recruit" onclick="cycleBadge(this)">集客・認知</div><div class="assignee-add" onclick="addAssignee(this)">＋ 担当</div></div>`;<br>  const body = document.getElementById(phase);<br>  body.insertBefore(card, body.querySelector('.add-task-btn'));<br>  document.getElementById('new-title-' + phase).value = '';<br>  document.getElementById('new-note-' + phase).value = '';<br>  closeForm(phase);<br>  initDrag();<br>  updateProgress();<br>}<br><br>function addAssignee(btn) {<br>  const name = prompt('担当者名を選択してください:\nくろむ, Nicca, chi_san, カルフ, たけめがね');<br>  if (!name) return;<br>  const m = members.find(mem => mem.label.toLowerCase().includes(name.toLowerCase()));<br>  if (m) {<br>    const badge = document.createElement('div');<br>    badge.className = `assignee-badge ${m.cls}`;<br>    badge.dataset.member = m.key;<br>    badge.innerHTML = `<span class="av">${m.initial}</span>${m.label}`;<br>    badge.onclick = function() { this.remove(); };<br>    btn.before(badge);<br>  }<br>}<br><br>function updateProgress() {<br>  const all = document.querySelectorAll('.task-card').length;<br>  const done = document.querySelectorAll('.task-check.checked').length;<br>  document.getElementById('prog-label').textContent = `完了: ${done} / ${all}`;<br>  const fill = document.getElementById('prog-fill');<br>  fill.style.width = all ? (done / all * 100) + '%' : '0%';<br>}<br><br>function toggleReal() {<br>  const body = document.getElementById('real-body');<br>  const open = body.classList.toggle('open');<br>  document.getElementById('real-arrow').textContent = open ? '▲ 閉じる' : '▼ 開く';<br>}<br><br>function saveHTML() {<br>  document.querySelectorAll('.task-card').forEach(c => {<br>    c.classList.remove('dragging', 'drop-before', 'drop-after');<br>    c.removeAttribute('draggable');<br>  });<br>  <br>  let scripts = document.getElementsByTagName('script');<br>  for (let s of scripts) {<br>    if (s.innerText.includes('let taskCounter =')) {<br>      s.innerText = s.innerText.replace(/let taskCounter = \d+;/, `let taskCounter = ${taskCounter};`);<br>    }<br>  }<br><br>  const html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;<br>  const blob = new Blob([html], {type: 'text/html'});<br>  const a = document.createElement('a');<br>  a.href = URL.createObjectURL(blob);<br>  a.download = 'index.html';<br>  a.click();<br>  <br>  setTimeout(initDrag, 100);<br>}<br><br>let dragSrc = null;<br>function initDrag() {<br>  document.querySelectorAll('.task-card').forEach(card => {<br>    card.setAttribute('draggable', 'true');<br>    card.ondragstart = e => { <br>      if (e.target.closest('[contenteditable="true"]')) {<br>        e.preventDefault();<br>        return;<br>      }<br>      dragSrc = card; <br>      card.classList.add('dragging'); <br>    };<br>    card.ondragend = () => { <br>      card.classList.remove('dragging'); <br>      document.querySelectorAll('.task-card').forEach(c => c.classList.remove('drop-before', 'drop-after'));<br>    };<br>    card.ondragover = e => {<br>      e.preventDefault();<br>      if (card === dragSrc) return;<br>      const rect = card.getBoundingClientRect();<br>      const mid = rect.top + rect.height / 2;<br>      document.querySelectorAll('.task-card').forEach(c => c.classList.remove('drop-before', 'drop-after'));<br>      card.classList.add(e.clientY < mid ? 'drop-before' : 'drop-after');<br>    };<br>    card.ondrop = e => {<br>      if (card === dragSrc) return;<br>      const rect = card.getBoundingClientRect();<br>      if (e.clientY < rect.top + rect.height / 2) card.before(dragSrc);<br>      else card.after(dragSrc);<br>      updateProgress();<br>    };<br>  });<br>}<br><br>window.onload = () => {<br>  initDrag();<br>  updateProgress();<br>};<br></script>
+<script>
+let taskCounter = 23;
+const members = [
+  { key: 'kurumu', cls: 'a-kurumu', initial: 'く', label: 'くろむ' },
+  { key: 'nicca',  cls: 'a-nicca',  initial: 'N', label: 'Nicca' },
+  { key: 'chisan', cls: 'a-chisan', initial: 'c', label: 'chi_san' },
+  { key: 'karuf',  cls: 'a-karuf',  initial: 'カ', label: 'カルフ' },
+  { key: 'takeme', cls: 'a-takeme', initial: 'た', label: 'たけめがね' },
+];
 
+/* ── localStorage 自動保存 ─────────────────────────────── */
+const STORAGE_KEY = 'ipadgarden_roadmap_v1';
+
+function getPhaseHTML(phaseId) {
+  const body = document.getElementById(phaseId);
+  if (!body) return '';
+  return Array.from(body.querySelectorAll('.task-card')).map(c => {
+    const clone = c.cloneNode(true);
+    clone.classList.remove('dragging', 'drop-before', 'drop-after');
+    clone.removeAttribute('draggable');
+    return clone.outerHTML;
+  }).join('');
+}
+
+function collectState() {
+  return {
+    taskCounter,
+    title:    document.querySelector('.title')?.innerHTML    || '',
+    subtitle: document.querySelector('.subtitle')?.innerHTML || '',
+    phaseHeaders: Array.from(document.querySelectorAll('.phase-header')).map(ph => ph.innerHTML),
+    phases: {
+      phase1: getPhaseHTML('phase1'),
+      phase2: getPhaseHTML('phase2'),
+      phase3: getPhaseHTML('phase3'),
+    },
+    realSteps: Array.from(document.querySelectorAll('.real-step')).map(step => ({
+      text: step.querySelector('.step-text')?.innerHTML || '',
+      hint: step.querySelector('.step-hint')?.innerHTML || '',
+    })),
+  };
+}
+
+function applyState(state) {
+  if (!state) return;
+  taskCounter = state.taskCounter || taskCounter;
+  if (state.title)    document.querySelector('.title').innerHTML    = state.title;
+  if (state.subtitle) document.querySelector('.subtitle').innerHTML = state.subtitle;
+
+  const phaseHeaders = document.querySelectorAll('.phase-header');
+  (state.phaseHeaders || []).forEach((html, i) => {
+    if (phaseHeaders[i]) phaseHeaders[i].innerHTML = html;
+  });
+
+  ['phase1', 'phase2', 'phase3'].forEach(id => {
+    const html = state.phases?.[id];
+    if (!html) return;
+    const body = document.getElementById(id);
+    if (!body) return;
+    body.querySelectorAll('.task-card').forEach(c => c.remove());
+    const addBtn = body.querySelector('.add-task-btn');
+    const tmp = document.createElement('div');
+    tmp.innerHTML = html;
+    Array.from(tmp.children).forEach(card => {
+      if (addBtn) body.insertBefore(card, addBtn);
+      else body.appendChild(card);
+    });
+  });
+
+  (state.realSteps || []).forEach((data, i) => {
+    const step = document.querySelectorAll('.real-step')[i];
+    if (!step) return;
+    const t = step.querySelector('.step-text');
+    const h = step.querySelector('.step-hint');
+    if (t) t.innerHTML = data.text;
+    if (h) h.innerHTML = data.hint;
+  });
+}
+
+let _saveTimer;
+function saveToStorage() {
+  clearTimeout(_saveTimer);
+  _saveTimer = setTimeout(() => {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(collectState())); } catch(e) {}
+  }, 400);
+}
+/* ──────────────────────────────────────────────────────── */
+
+function toggleCheck(el) {
+  const card = el.closest('.task-card');
+  el.classList.toggle('checked');
+  card.classList.toggle('done', el.classList.contains('checked'));
+  updateProgress();
+  saveToStorage();
+}
+
+function deleteTask(el) {
+  if(confirm('このタスクを削除しますか？')) {
+    el.closest('.task-card').remove();
+    updateProgress();
+    saveToStorage();
+  }
+}
+
+function cycleBadge(el) {
+  const card = el.closest('.task-card');
+  const cats   = ['recruit', 'workshop', 'content', 'sns'];
+  const labels = ['集客・認知', 'リアル講座', 'コンテンツ', 'SNS発信'];
+  let currentCat = cats.find(c => card.classList.contains('cat-' + c));
+  let idx = cats.indexOf(currentCat);
+  card.classList.remove('cat-' + currentCat);
+  idx = (idx + 1) % cats.length;
+  card.classList.add('cat-' + cats[idx]);
+  el.className = 'cat-badge badge-' + cats[idx];
+  el.textContent = labels[idx];
+  saveToStorage();
+}
+
+function openForm(phase)  { document.getElementById('add-form-' + phase).classList.add('open'); }
+function closeForm(phase) { document.getElementById('add-form-' + phase).classList.remove('open'); }
+
+function addTask(phase) {
+  const title = document.getElementById('new-title-' + phase).value;
+  if (!title) return;
+  taskCounter++;
+  const note = document.getElementById('new-note-' + phase).value;
+  const card = document.createElement('div');
+  card.className = 'task-card cat-recruit';
+  card.dataset.id = 'tc' + taskCounter;
+  card.innerHTML = `<div class="drag-handle"><span></span><span></span><span></span></div><div class="task-delete" onclick="deleteTask(this)">×</div><div class="task-top"><div class="task-check" onclick="toggleCheck(this)"></div><div class="task-title" contenteditable="true">${title}</div></div><div class="task-note" contenteditable="true" data-placeholder="メモを追加…">${note}</div><div class="task-footer"><div class="cat-badge badge-recruit" onclick="cycleBadge(this)">集客・認知</div><div class="assignee-add" onclick="addAssignee(this)">＋ 担当</div></div>`;
+  const body = document.getElementById(phase);
+  body.insertBefore(card, body.querySelector('.add-task-btn'));
+  document.getElementById('new-title-' + phase).value = '';
+  document.getElementById('new-note-' + phase).value  = '';
+  closeForm(phase);
+  initDrag();
+  updateProgress();
+  saveToStorage();
+}
+
+function addAssignee(btn) {
+  const name = prompt('担当者名を選択してください:\nくろむ, Nicca, chi_san, カルフ, たけめがね');
+  if (!name) return;
+  const m = members.find(mem => mem.label.toLowerCase().includes(name.toLowerCase()));
+  if (m) {
+    const badge = document.createElement('div');
+    badge.className = `assignee-badge ${m.cls}`;
+    badge.dataset.member = m.key;
+    badge.innerHTML = `<span class="av">${m.initial}</span>${m.label}`;
+    badge.onclick = function() { this.remove(); saveToStorage(); };
+    btn.before(badge);
+    saveToStorage();
+  }
+}
+
+function updateProgress() {
+  const all  = document.querySelectorAll('.task-card').length;
+  const done = document.querySelectorAll('.task-check.checked').length;
+  document.getElementById('prog-label').textContent = `完了: ${done} / ${all}`;
+  document.getElementById('prog-fill').style.width  = all ? (done / all * 100) + '%' : '0%';
+}
+
+function toggleReal() {
+  const body = document.getElementById('real-body');
+  const open = body.classList.toggle('open');
+  document.getElementById('real-arrow').textContent = open ? '▲ 閉じる' : '▼ 開く';
+}
+
+function saveHTML() {
+  document.querySelectorAll('.task-card').forEach(c => {
+    c.classList.remove('dragging', 'drop-before', 'drop-after');
+    c.removeAttribute('draggable');
+  });
+
+  /* taskCounter をスクリプト内に反映 */
+  Array.from(document.scripts).forEach(s => {
+    if (s.textContent.includes('let taskCounter =')) {
+      s.textContent = s.textContent.replace(
+        /let taskCounter = \d+;/,
+        `let taskCounter = ${taskCounter};`
+      );
+    }
+  });
+
+  try {
+    const html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+    const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href     = url;
+    a.download = 'index.html';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+
+    /* 保存完了フィードバック */
+    const btn = document.querySelector('button[onclick="saveHTML()"]');
+    if (btn) {
+      const orig = btn.innerHTML;
+      btn.innerHTML = '✅ 保存完了';
+      btn.style.background = '#C5F0E1';
+      setTimeout(() => { btn.innerHTML = orig; btn.style.background = '#E1F5EE'; }, 2000);
+    }
+  } catch(e) {
+    alert('保存に失敗しました: ' + e.message);
+  }
+
+  setTimeout(initDrag, 100);
+}
+
+let dragSrc = null;
+function initDrag() {
+  document.querySelectorAll('.task-card').forEach(card => {
+    card.setAttribute('draggable', 'true');
+    card.ondragstart = e => {
+      if (e.target.closest('[contenteditable="true"]')) { e.preventDefault(); return; }
+      dragSrc = card;
+      card.classList.add('dragging');
+    };
+    card.ondragend = () => {
+      card.classList.remove('dragging');
+      document.querySelectorAll('.task-card').forEach(c => c.classList.remove('drop-before', 'drop-after'));
+      saveToStorage();
+    };
+    card.ondragover = e => {
+      e.preventDefault();
+      if (card === dragSrc) return;
+      const rect = card.getBoundingClientRect();
+      const mid  = rect.top + rect.height / 2;
+      document.querySelectorAll('.task-card').forEach(c => c.classList.remove('drop-before', 'drop-after'));
+      card.classList.add(e.clientY < mid ? 'drop-before' : 'drop-after');
+    };
+    card.ondrop = e => {
+      if (card === dragSrc) return;
+      const rect = card.getBoundingClientRect();
+      if (e.clientY < rect.top + rect.height / 2) card.before(dragSrc);
+      else card.after(dragSrc);
+      updateProgress();
+    };
+  });
+}
+
+/* contenteditable の入力を自動保存 */
+document.addEventListener('input', e => {
+  if (e.target.matches('[contenteditable]')) saveToStorage();
+});
+
+window.onload = () => {
+  /* localStorage に保存済みの状態があれば復元 */
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) applyState(JSON.parse(saved));
+  } catch(e) {}
+
+  initDrag();
+  updateProgress();
+};
+
+</script>
 </body></html>
