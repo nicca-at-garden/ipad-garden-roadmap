@@ -127,6 +127,9 @@ body { font-family: var(--font-sans, sans-serif); }
 </style>
 </head>
 <body>
+
+
+
 <div class="header">
   <div class="header-text">
     <div class="title" contenteditable="true">iPad Garden 第4期 準備ロードマップ</div>
@@ -145,7 +148,7 @@ body { font-family: var(--font-sans, sans-serif); }
   <div class="legend-item"><div class="legend-dot ld-s"></div>SNS発信</div>
 </div>
 
-<div class="progress-label" id="prog-label">完了: 0 / 21</div>
+<div class="progress-label" id="prog-label">完了: 0 / 23</div>
 <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
 
 <div class="timeline">
@@ -202,12 +205,12 @@ body { font-family: var(--font-sans, sans-serif); }
         <div class="drag-handle"><span></span><span></span><span></span></div><div class="task-delete" onclick="deleteTask(this)">×</div>
         <div class="task-top">
           <div class="task-check" onclick="toggleCheck(this)"></div>
-          <div class="task-title" contenteditable="true">4／8MTG</div>
+          <div class="task-title" contenteditable="true">4/8MTG</div>
         </div>
         <div class="task-note" contenteditable="true" data-placeholder="メモを追加…">HP更新・バナー・勉強会の状況を共有</div>
         <div class="task-footer"><div class="cat-badge badge-content" onclick="cycleBadge(this)">コンテンツ</div><div class="assignee-add" onclick="addAssignee(this)">＋ 担当</div></div>
       </div>
-      <div class="task-card cat-workshop" data-id="tc21"><div class="drag-handle"><span></span><span></span><span></span></div><div class="task-delete" onclick="deleteTask(this)">×</div><div class="task-top"><div class="task-check" onclick="toggleCheck(this)"></div><div class="task-title" contenteditable="true">リアル講座集客方法精査</div></div><div class="task-note" contenteditable="true" data-placeholder="メモを追加…">Instagram<br>開催地域での広告<br>Google広告</div><div class="task-footer"><div class="cat-badge badge-workshop" onclick="cycleBadge(this)">リアル講座</div><div class="assignee-add" onclick="addAssignee(this)">＋ 担当</div></div></div><div id="add-form-phase1" class="add-form">
+      <div class="task-card cat-workshop" data-id="tc21"><div class="drag-handle"><span></span><span></span><span></span></div><div class="task-delete" onclick="deleteTask(this)">×</div><div class="task-top"><div class="task-check" onclick="toggleCheck(this)"></div><div class="task-title" contenteditable="true">リアル講座集客方法精査</div></div><div class="task-note" contenteditable="true" data-placeholder="メモを追加…">Instagram<br>開催地域での広告<br>Google広告</div><div class="task-footer"><div class="cat-badge badge-workshop" onclick="cycleBadge(this)">リアル講座</div><div class="assignee-add" onclick="addAssignee(this)">＋ 担当</div></div></div><div class="task-card cat-content" data-id="tc22"><div class="drag-handle"><span></span><span></span><span></span></div><div class="task-delete" onclick="deleteTask(this)">×</div><div class="task-top"><div class="task-check" onclick="toggleCheck(this)"></div><div class="task-title" contenteditable="true">既存メンバーの継続意思確認 スケジュール決め</div></div><div class="task-note" contenteditable="true" data-placeholder="メモを追加…"></div><div class="task-footer"><div class="cat-badge badge-content" onclick="cycleBadge(this)">コンテンツ</div><div class="assignee-add" onclick="addAssignee(this)">＋ 担当</div></div></div><div id="add-form-phase1" class="add-form">
         <input id="new-title-phase1" type="text" placeholder="タスク名">
         <textarea id="new-note-phase1" placeholder="メモ（任意）"></textarea>
         <select id="new-cat-phase1">
@@ -232,9 +235,9 @@ body { font-family: var(--font-sans, sans-serif); }
         <div class="drag-handle"><span></span><span></span><span></span></div><div class="task-delete" onclick="deleteTask(this)">×</div>
         <div class="task-top">
           <div class="task-check" onclick="toggleCheck(this)"></div>
-          <div class="task-title" contenteditable="true">リアル講座を実施（1回）</div>
+          <div class="task-title" contenteditable="true">リアル講座4/26大阪</div>
         </div>
-        <div class="task-note" contenteditable="true" data-placeholder="メモを追加…">参加者をコミュニティ予告の見込み客に</div>
+        <div class="task-note" contenteditable="true" data-placeholder="メモを追加…">早期申込特典（早期入会？割引？）<br></div>
         <div class="task-footer"><div class="cat-badge badge-workshop" onclick="cycleBadge(this)">リアル講座</div><div class="assignee-add" onclick="addAssignee(this)">＋ 担当</div></div>
       </div>
       <div class="task-card cat-recruit" data-id="t18">
@@ -243,14 +246,14 @@ body { font-family: var(--font-sans, sans-serif); }
           <div class="task-check" onclick="toggleCheck(this)"></div>
           <div class="task-title" contenteditable="true">HP更新「5月より4期募集開始」</div>
         </div>
-        <div class="task-note" contenteditable="true" data-placeholder="メモを追加…">chi-sanと作業・リアル勉強会の予定も掲載</div>
-        <div class="task-footer"><div class="cat-badge badge-recruit" onclick="cycleBadge(this)">集客・認知</div><div class="assignee-badge a-chisan" data-member="chisan" onclick="this.remove()" title="クリックで削除"><span class="av">c</span>chi_san</div><div class="assignee-add" onclick="addAssignee(this)">＋ 担当</div></div>
+        <div class="task-note" contenteditable="true" data-placeholder="メモを追加…">リアル勉強会の予定も掲載</div>
+        <div class="task-footer"><div class="cat-badge badge-recruit" onclick="cycleBadge(this)">集客・認知</div><div class="assignee-badge a-chisan" data-member="chisan" onclick="this.remove()" title="クリックで削除"><span class="av">c</span>chi_san</div><div class="assignee-badge a-nicca" data-member="nicca" title="クリックで削除"><span class="av">N</span>Nicca</div><div class="assignee-add" onclick="addAssignee(this)">＋ 担当</div></div>
       </div>
       <div class="task-card cat-sns" data-id="t19">
         <div class="drag-handle"><span></span><span></span><span></span></div><div class="task-delete" onclick="deleteTask(this)">×</div>
         <div class="task-top">
           <div class="task-check" onclick="toggleCheck(this)"></div>
-          <div class="task-title" contenteditable="true">三連バナー作成（くろむさん）</div>
+          <div class="task-title" contenteditable="true">三連バナー作成</div>
         </div>
         <div class="task-footer"><div class="cat-badge badge-sns" onclick="cycleBadge(this)">SNS発信</div><div class="assignee-badge a-kurumu" data-member="kurumu" onclick="this.remove()" title="クリックで削除"><span class="av">く</span>くろむ</div><div class="assignee-badge a-nicca" data-member="nicca" title="クリックで削除"><span class="av">N</span>Nicca</div><div class="assignee-add" onclick="addAssignee(this)">＋ 担当</div></div>
       </div>
@@ -260,7 +263,7 @@ body { font-family: var(--font-sans, sans-serif); }
           <div class="task-check" onclick="toggleCheck(this)"></div>
           <div class="task-title" contenteditable="true">週3以上の発信リズムを確立</div>
         </div>
-        <div class="task-note" contenteditable="true" data-placeholder="メモを追加…">iPad活用tips・コミュニティの魅力・講座レポ</div>
+        <div class="task-note" contenteditable="true" data-placeholder="メモを追加…">iPad活用tips・コミュニティの魅力・講座レポ<br>朝活LIVE<br></div>
         <div class="task-footer"><div class="cat-badge badge-sns" onclick="cycleBadge(this)">SNS発信</div><div class="assignee-add" onclick="addAssignee(this)">＋ 担当</div></div>
       </div>
       <div class="task-card cat-content" data-id="t7">
@@ -287,7 +290,7 @@ body { font-family: var(--font-sans, sans-serif); }
           <div class="task-check" onclick="toggleCheck(this)"></div>
           <div class="task-title" contenteditable="true">リアル講座参加者にコミュニティを案内</div>
         </div>
-        <div class="task-note" contenteditable="true" data-placeholder="メモを追加…">体験 → 興味喚起 → 申込の流れを設計</div>
+        <div class="task-note" contenteditable="true" data-placeholder="メモを追加…">体験 → 興味喚起 → 申込の流れを設計<br><span style="background-color: rgb(227, 247, 240);">早期申込特典（早期入会？</span><span style="background-color: rgb(227, 247, 240);">割引？）</span></div>
         <div class="task-footer"><div class="cat-badge badge-recruit" onclick="cycleBadge(this)">集客・認知</div><div class="assignee-add" onclick="addAssignee(this)">＋ 担当</div></div>
       </div>
       <div class="task-card cat-recruit" data-id="t20">
@@ -300,7 +303,7 @@ body { font-family: var(--font-sans, sans-serif); }
         <div class="task-note" contenteditable="true" data-placeholder="メモを追加…">LINE経由で4期決済への案内シナリオを設計・連携・テストまで</div>
         <div class="task-footer"><div class="cat-badge badge-recruit" onclick="cycleBadge(this)">集客・認知</div><div class="assignee-add" onclick="addAssignee(this)">＋ 担当</div></div>
       </div>
-      <div id="add-form-phase2" class="add-form">
+      <div class="task-card cat-content" data-id="tc23"><div class="drag-handle"><span></span><span></span><span></span></div><div class="task-delete" onclick="deleteTask(this)">×</div><div class="task-top"><div class="task-check" onclick="toggleCheck(this)"></div><div class="task-title" contenteditable="true">ロボットペイメントからLINEに移行していない２人への対応</div></div><div class="task-note" contenteditable="true" data-placeholder="メモを追加…">（サセモさん、つばみさん）へ意思確認。<br>　回答ない場合は退会となる。継続の場合の決済リンク送付。</div><div class="task-footer"><div class="cat-badge badge-content" onclick="cycleBadge(this)">コンテンツ</div><div class="assignee-add" onclick="addAssignee(this)">＋ 担当</div></div></div><div id="add-form-phase2" class="add-form">
         <input id="new-title-phase2" type="text" placeholder="タスク名">
         <textarea id="new-note-phase2" placeholder="メモ（任意）"></textarea>
         <select id="new-cat-phase2">
@@ -325,7 +328,7 @@ body { font-family: var(--font-sans, sans-serif); }
         <div class="drag-handle"><span></span><span></span><span></span></div><div class="task-delete" onclick="deleteTask(this)">×</div>
         <div class="task-top">
           <div class="task-check" onclick="toggleCheck(this)"></div>
-          <div class="task-title" contenteditable="true">募集ページ・セールス文章を完成</div>
+          <div class="task-title" contenteditable="true">HP募集ページ・セールス文章を完成</div>
         </div>
         <div class="task-note" contenteditable="true" data-placeholder="メモを追加…">実績・受講者の声・Q&amp;Aを入れ込む</div>
         <div class="task-footer"><div class="cat-badge badge-recruit" onclick="cycleBadge(this)">集客・認知</div><div class="assignee-add" onclick="addAssignee(this)">＋ 担当</div></div>
@@ -361,7 +364,7 @@ body { font-family: var(--font-sans, sans-serif); }
         <div class="drag-handle"><span></span><span></span><span></span></div><div class="task-delete" onclick="deleteTask(this)">×</div>
         <div class="task-top">
           <div class="task-check" onclick="toggleCheck(this)"></div>
-          <div class="task-title" contenteditable="true">募集直前にリアル勉強会（1回）</div>
+          <div class="task-title" contenteditable="true">リアル講座5/16名古屋,5/17東京</div>
         </div>
         <div class="task-note" contenteditable="true" data-placeholder="メモを追加…">4期募集に効果的に活用。「次は入学してさらに深めよう」の導線に</div>
         <div class="task-footer"><div class="cat-badge badge-workshop" onclick="cycleBadge(this)">リアル講座</div><div class="assignee-add" onclick="addAssignee(this)">＋ 担当</div></div>
@@ -422,7 +425,7 @@ const catMap = {
   sns: { cls: 'cat-sns', badge: 'badge-sns', label: 'SNS発信' }
 };
 const catOrder = ['recruit', 'workshop', 'content', 'sns'];
-let taskCounter = 21;
+let taskCounter = 23;
 
 // ─── チェック・削除・バッジ ──────────────────────────────────────
 function toggleCheck(el) {
@@ -769,6 +772,12 @@ document.addEventListener('DOMContentLoaded', () => {
   updateProgress();
 });
 </script>
+
+
+
+
+
+
 
 </body>
 </html>
