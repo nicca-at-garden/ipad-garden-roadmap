@@ -686,7 +686,7 @@ body { font-family: var(--font-sans, sans-serif); }
   <div class="legend-item"><div class="legend-dot ld-s"></div>SNS発信</div>
 </div>
 
-<div class="progress-label" id="prog-label">完了: 0 / 23</div>
+<div class="progress-label" id="prog-label">完了: 0 / 24</div>
 <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
 
 <div class="timeline">
@@ -889,7 +889,7 @@ body { font-family: var(--font-sans, sans-serif); }
         <div class="task-note" contenteditable="true" data-placeholder="メモを追加…">（サセモさん、つばみさん）へ意思確認。\n回答ない場合は退会となる。継続の場合の決済リンク送付。</div>
         <div class="task-footer"><div class="cat-badge badge-content" onclick="cycleBadge(this)">コンテンツ</div><div class="assignee-add" onclick="addAssignee(this)">＋ 担当</div></div>
       </div>
-      <button class="add-task-btn" onclick="openForm('phase2')">＋ タスクを追加</button>
+      <div class="task-card cat-recruit" data-id="tc24"><div class="drag-handle"><span></span><span></span><span></span></div><div class="task-delete" onclick="deleteTask(this)">×</div><div class="task-top"><div class="task-check" onclick="toggleCheck(this)"></div><div class="task-title" contenteditable="true">継続確認アンケート</div></div><div class="task-note" contenteditable="true" data-placeholder="メモを追加…">4/24~30 継続希望の方は何もする必要はないよ。もし退会したい人は4/30までにチケット切って連絡してね。5/1以降は受け付けないよ。</div><div class="task-footer"><div class="cat-badge badge-recruit" onclick="cycleBadge(this)">集客・認知</div><div class="assignee-add" onclick="addAssignee(this)">＋ 担当</div></div></div><button class="add-task-btn" onclick="openForm('phase2')">＋ タスクを追加</button>
       <div id="add-form-phase2" class="add-form">
         <input id="new-title-phase2" type="text" placeholder="タスク名">
         <textarea id="new-note-phase2" placeholder="メモ"></textarea>
@@ -993,7 +993,7 @@ body { font-family: var(--font-sans, sans-serif); }
 </div>
 
 <script>
-let taskCounter = 23;
+let taskCounter = 24;
 const members = [
   { key: 'kurumu', cls: 'a-kurumu', initial: 'く', label: 'くろむ' },
   { key: 'nicca',  cls: 'a-nicca',  initial: 'N', label: 'Nicca' },
