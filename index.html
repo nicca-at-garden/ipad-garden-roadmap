@@ -686,25 +686,32 @@ body { font-family: var(--font-sans, sans-serif); }
   <div class="legend-item"><div class="legend-dot ld-s"></div>SNS発信</div>
 </div>
 
-<div class="progress-label" id="prog-label">完了: 0 / 24</div>
-<div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+<div class="progress-label" id="prog-label">完了: 7 / 24</div>
+<div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width: 29.1667%;"></div></div>
 
 <div class="timeline">
   <!-- PHASE 1 -->
   <div class="phase ph-now">
     <div class="phase-header" contenteditable="true">📌 今すぐ（4月前半）</div>
     <div class="phase-body" id="phase1">
-      <div class="task-card cat-workshop" data-id="t1">
+      
+      
+      
+      
+      
+      
+      
+      
+      <div class="task-card cat-workshop done" data-id="t1">
         <div class="drag-handle"><span></span><span></span><span></span></div>
         <div class="task-delete" onclick="deleteTask(this)">×</div>
         <div class="task-top">
-          <div class="task-check" onclick="toggleCheck(this)"></div>
+          <div class="task-check checked" onclick="toggleCheck(this)"></div>
           <div class="task-title" contenteditable="true">リアル講座の日程・会場を確定</div>
         </div>
         <div class="task-note" contenteditable="true" data-placeholder="メモを追加…">4月中〜5月募集前までに1回開催</div>
         <div class="task-footer"><div class="cat-badge badge-workshop" onclick="cycleBadge(this)">リアル講座</div><div class="assignee-add" onclick="addAssignee(this)">＋ 担当</div></div>
-      </div>
-      <div class="task-card cat-sns" data-id="t2">
+      </div><div class="task-card cat-sns" data-id="t2">
         <div class="drag-handle"><span></span><span></span><span></span></div>
         <div class="task-delete" onclick="deleteTask(this)">×</div>
         <div class="task-top">
@@ -713,68 +720,61 @@ body { font-family: var(--font-sans, sans-serif); }
         </div>
         <div class="task-note" contenteditable="true" data-placeholder="メモを追加…">「5月募集予定」を明記して期待感を醸成</div>
         <div class="task-footer"><div class="cat-badge badge-sns" onclick="cycleBadge(this)">SNS発信</div><div class="assignee-add" onclick="addAssignee(this)">＋ 担当</div></div>
-      </div>
-      <div class="task-card cat-content" data-id="t3">
+      </div><div class="task-card cat-content done" data-id="t3">
         <div class="drag-handle"><span></span><span></span><span></span></div>
         <div class="task-delete" onclick="deleteTask(this)">×</div>
         <div class="task-top">
-          <div class="task-check" onclick="toggleCheck(this)"></div>
+          <div class="task-check checked" onclick="toggleCheck(this)"></div>
           <div class="task-title" contenteditable="true">3期の振り返り・実績をまとめる</div>
         </div>
         <div class="task-note" contenteditable="true" data-placeholder="メモを追加…">受講者の声・Before/Afterが集客コンテンツの核になる</div>
         <div class="task-footer"><div class="cat-badge badge-content" onclick="cycleBadge(this)">コンテンツ</div><div class="assignee-add" onclick="addAssignee(this)">＋ 担当</div></div>
-      </div>
-      <div class="task-card cat-recruit" data-id="t4">
+      </div><div class="task-card cat-recruit done" data-id="t4">
         <div class="drag-handle"><span></span><span></span><span></span></div>
         <div class="task-delete" onclick="deleteTask(this)">×</div>
         <div class="task-top">
-          <div class="task-check" onclick="toggleCheck(this)"></div>
+          <div class="task-check checked" onclick="toggleCheck(this)"></div>
           <div class="task-title" contenteditable="true">集客戦略の方針を決める</div>
         </div>
         <div class="task-note" contenteditable="true" data-placeholder="メモを追加…">紹介 / SNS / リアル講座 からの導線を整理</div>
         <div class="task-footer"><div class="cat-badge badge-recruit" onclick="cycleBadge(this)">集客・認知</div><div class="assignee-add" onclick="addAssignee(this)">＋ 担当</div></div>
-      </div>
-      <div class="task-card cat-recruit" data-id="t16">
+      </div><div class="task-card cat-recruit done" data-id="t16">
         <div class="drag-handle"><span></span><span></span><span></span></div>
         <div class="task-delete" onclick="deleteTask(this)">×</div>
         <div class="task-top">
-          <div class="task-check" onclick="toggleCheck(this)"></div>
+          <div class="task-check checked" onclick="toggleCheck(this)"></div>
           <div class="task-title" contenteditable="true">個別相談を計画表に入れるか決定</div>
         </div>
         <div class="task-note" contenteditable="true" data-placeholder="メモを追加…">くろむさんと確認・方針を決めてMTGで報告</div>
         <div class="task-footer"><div class="cat-badge badge-recruit" onclick="cycleBadge(this)">集客・認知</div><div class="assignee-add" onclick="addAssignee(this)">＋ 担当</div></div>
-      </div>
-      <div class="task-card cat-content" data-id="t17">
+      </div><div class="task-card cat-content done" data-id="t17">
         <div class="drag-handle"><span></span><span></span><span></span></div>
         <div class="task-delete" onclick="deleteTask(this)">×</div>
         <div class="task-top">
-          <div class="task-check" onclick="toggleCheck(this)"></div>
+          <div class="task-check checked" onclick="toggleCheck(this)"></div>
           <div class="task-title" contenteditable="true">4/8MTG</div>
         </div>
         <div class="task-note" contenteditable="true" data-placeholder="メモを追加…">HP更新・バナー・勉強会の状況を共有</div>
         <div class="task-footer"><div class="cat-badge badge-content" onclick="cycleBadge(this)">コンテンツ</div><div class="assignee-add" onclick="addAssignee(this)">＋ 担当</div></div>
-      </div>
-      <div class="task-card cat-workshop" data-id="tc21">
+      </div><div class="task-card cat-workshop done" data-id="tc21">
         <div class="drag-handle"><span></span><span></span><span></span></div>
         <div class="task-delete" onclick="deleteTask(this)">×</div>
         <div class="task-top">
-          <div class="task-check" onclick="toggleCheck(this)"></div>
+          <div class="task-check checked" onclick="toggleCheck(this)"></div>
           <div class="task-title" contenteditable="true">リアル講座集客方法精査</div>
         </div>
         <div class="task-note" contenteditable="true" data-placeholder="メモを追加…">Instagram\n開催地域での広告\nGoogle広告</div>
         <div class="task-footer"><div class="cat-badge badge-workshop" onclick="cycleBadge(this)">リアル講座</div><div class="assignee-add" onclick="addAssignee(this)">＋ 担当</div></div>
-      </div>
-      <div class="task-card cat-content" data-id="tc22">
+      </div><div class="task-card cat-content done" data-id="tc22">
         <div class="drag-handle"><span></span><span></span><span></span></div>
         <div class="task-delete" onclick="deleteTask(this)">×</div>
         <div class="task-top">
-          <div class="task-check" onclick="toggleCheck(this)"></div>
+          <div class="task-check checked" onclick="toggleCheck(this)"></div>
           <div class="task-title" contenteditable="true">既存メンバーの継続意思確認 スケジュール決め</div>
         </div>
         <div class="task-note" contenteditable="true" data-placeholder="メモを追加…"></div>
         <div class="task-footer"><div class="cat-badge badge-content" onclick="cycleBadge(this)">コンテンツ</div><div class="assignee-add" onclick="addAssignee(this)">＋ 担当</div></div>
-      </div>
-      <button class="add-task-btn" onclick="openForm('phase1')">＋ タスクを追加</button>
+      </div><button class="add-task-btn" onclick="openForm('phase1')">＋ タスクを追加</button>
       <div id="add-form-phase1" class="add-form">
         <input id="new-title-phase1" type="text" placeholder="タスク名">
         <textarea id="new-note-phase1" placeholder="メモ"></textarea>
@@ -790,7 +790,25 @@ body { font-family: var(--font-sans, sans-serif); }
   <div class="phase ph-mid">
     <div class="phase-header" contenteditable="true">🌿 中盤（4月後半）</div>
     <div class="phase-body" id="phase2">
-      <div class="task-card cat-workshop" data-id="t5">
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      <div class="task-card cat-recruit" data-id="t9">
+        <div class="drag-handle"><span></span><span></span><span></span></div>
+        <div class="task-delete" onclick="deleteTask(this)">×</div>
+        <div class="task-top">
+          <div class="task-check" onclick="toggleCheck(this)"></div>
+          <div class="task-title" contenteditable="true">リアル講座参加者にコミュニティを案内</div>
+        </div>
+        <div class="task-note" contenteditable="true" data-placeholder="メモを追加…">体験 → 興味喚起 → 申込の流れを設計\n早期申込特典（早期入会？割引？）</div>
+        <div class="task-footer"><div class="cat-badge badge-recruit" onclick="cycleBadge(this)">集客・認知</div><div class="assignee-add" onclick="addAssignee(this)">＋ 担当</div></div>
+      </div><div class="task-card cat-workshop" data-id="t5">
         <div class="drag-handle"><span></span><span></span><span></span></div>
         <div class="task-delete" onclick="deleteTask(this)">×</div>
         <div class="task-top">
@@ -799,8 +817,7 @@ body { font-family: var(--font-sans, sans-serif); }
         </div>
         <div class="task-note" contenteditable="true" data-placeholder="メモを追加…">早期申込特典（早期入会？割引？）</div>
         <div class="task-footer"><div class="cat-badge badge-workshop" onclick="cycleBadge(this)">リアル講座</div><div class="assignee-add" onclick="addAssignee(this)">＋ 担当</div></div>
-      </div>
-      <div class="task-card cat-recruit" data-id="t18">
+      </div><div class="task-card cat-recruit" data-id="t18">
         <div class="drag-handle"><span></span><span></span><span></span></div>
         <div class="task-delete" onclick="deleteTask(this)">×</div>
         <div class="task-top">
@@ -814,8 +831,7 @@ body { font-family: var(--font-sans, sans-serif); }
           <div class="assignee-badge a-nicca" data-member="nicca" onclick="this.remove()"><span class="av">N</span>Nicca</div>
           <div class="assignee-add" onclick="addAssignee(this)">＋ 担当</div>
         </div>
-      </div>
-      <div class="task-card cat-sns" data-id="t19">
+      </div><div class="task-card cat-sns" data-id="t19">
         <div class="drag-handle"><span></span><span></span><span></span></div>
         <div class="task-delete" onclick="deleteTask(this)">×</div>
         <div class="task-top">
@@ -828,8 +844,7 @@ body { font-family: var(--font-sans, sans-serif); }
           
           <div class="assignee-add" onclick="addAssignee(this)">＋ 担当</div>
         </div>
-      </div>
-      <div class="task-card cat-sns" data-id="t6">
+      </div><div class="task-card cat-sns" data-id="t6">
         <div class="drag-handle"><span></span><span></span><span></span></div>
         <div class="task-delete" onclick="deleteTask(this)">×</div>
         <div class="task-top">
@@ -838,8 +853,7 @@ body { font-family: var(--font-sans, sans-serif); }
         </div>
         <div class="task-note" contenteditable="true" data-placeholder="メモを追加…">iPad活用tips・コミュニティの魅力・講座レポ\n朝活LIVE</div>
         <div class="task-footer"><div class="cat-badge badge-sns" onclick="cycleBadge(this)">SNS発信</div><div class="assignee-add" onclick="addAssignee(this)">＋ 担当</div></div>
-      </div>
-      <div class="task-card cat-content" data-id="t7">
+      </div><div class="task-card cat-content" data-id="t7">
         <div class="drag-handle"><span></span><span></span><span></span></div>
         <div class="task-delete" onclick="deleteTask(this)">×</div>
         <div class="task-top">
@@ -848,8 +862,7 @@ body { font-family: var(--font-sans, sans-serif); }
         </div>
         <div class="task-note" contenteditable="true" data-placeholder="メモを追加…">3期の改善点を反映した内容にアップデート</div>
         <div class="task-footer"><div class="cat-badge badge-content" onclick="cycleBadge(this)">コンテンツ</div><div class="assignee-add" onclick="addAssignee(this)">＋ 担当</div></div>
-      </div>
-      <div class="task-card cat-recruit" data-id="t8">
+      </div><div class="task-card cat-recruit" data-id="t8">
         <div class="drag-handle"><span></span><span></span><span></span></div>
         <div class="task-delete" onclick="deleteTask(this)">×</div>
         <div class="task-top">
@@ -858,18 +871,7 @@ body { font-family: var(--font-sans, sans-serif); }
         </div>
         <div class="task-note" contenteditable="true" data-placeholder="メモを追加…">LINE・メルマガ等で早期申込者を集めておく</div>
         <div class="task-footer"><div class="cat-badge badge-recruit" onclick="cycleBadge(this)">集客・認知</div><div class="assignee-add" onclick="addAssignee(this)">＋ 担当</div></div>
-      </div>
-      <div class="task-card cat-recruit" data-id="t9">
-        <div class="drag-handle"><span></span><span></span><span></span></div>
-        <div class="task-delete" onclick="deleteTask(this)">×</div>
-        <div class="task-top">
-          <div class="task-check" onclick="toggleCheck(this)"></div>
-          <div class="task-title" contenteditable="true">リアル講座参加者にコミュニティを案内</div>
-        </div>
-        <div class="task-note" contenteditable="true" data-placeholder="メモを追加…">体験 → 興味喚起 → 申込の流れを設計\n早期申込特典（早期入会？割引？）</div>
-        <div class="task-footer"><div class="cat-badge badge-recruit" onclick="cycleBadge(this)">集客・認知</div><div class="assignee-add" onclick="addAssignee(this)">＋ 担当</div></div>
-      </div>
-      <div class="task-card cat-recruit" data-id="t20">
+      </div><div class="task-card cat-recruit" data-id="t20">
         <div class="drag-handle"><span></span><span></span><span></span></div>
         <div class="task-delete" onclick="deleteTask(this)">×</div>
         <div class="task-top">
@@ -878,8 +880,7 @@ body { font-family: var(--font-sans, sans-serif); }
         </div>
         <div class="task-note" contenteditable="true" data-placeholder="メモを追加…">LINE経由で4期決済への案内シナリオを設計・連携・テストまで</div>
         <div class="task-footer"><div class="cat-badge badge-recruit" onclick="cycleBadge(this)">集客・認知</div><div class="assignee-add" onclick="addAssignee(this)">＋ 担当</div></div>
-      </div>
-      <div class="task-card cat-content" data-id="tc23">
+      </div><div class="task-card cat-content" data-id="tc23">
         <div class="drag-handle"><span></span><span></span><span></span></div>
         <div class="task-delete" onclick="deleteTask(this)">×</div>
         <div class="task-top">
@@ -888,8 +889,7 @@ body { font-family: var(--font-sans, sans-serif); }
         </div>
         <div class="task-note" contenteditable="true" data-placeholder="メモを追加…">（サセモさん、つばみさん）へ意思確認。\n回答ない場合は退会となる。継続の場合の決済リンク送付。</div>
         <div class="task-footer"><div class="cat-badge badge-content" onclick="cycleBadge(this)">コンテンツ</div><div class="assignee-add" onclick="addAssignee(this)">＋ 担当</div></div>
-      </div>
-      <div class="task-card cat-recruit" data-id="tc24"><div class="drag-handle"><span></span><span></span><span></span></div><div class="task-delete" onclick="deleteTask(this)">×</div><div class="task-top"><div class="task-check" onclick="toggleCheck(this)"></div><div class="task-title" contenteditable="true">継続確認アンケート</div></div><div class="task-note" contenteditable="true" data-placeholder="メモを追加…">4/24~30 継続希望の方は何もする必要はないよ。もし退会したい人は4/30までにチケット切って連絡してね。5/1以降は受け付けないよ。</div><div class="task-footer"><div class="cat-badge badge-recruit" onclick="cycleBadge(this)">集客・認知</div><div class="assignee-add" onclick="addAssignee(this)">＋ 担当</div></div></div><button class="add-task-btn" onclick="openForm('phase2')">＋ タスクを追加</button>
+      </div><div class="task-card cat-recruit" data-id="tc24"><div class="drag-handle"><span></span><span></span><span></span></div><div class="task-delete" onclick="deleteTask(this)">×</div><div class="task-top"><div class="task-check" onclick="toggleCheck(this)"></div><div class="task-title" contenteditable="true">継続確認アンケート</div></div><div class="task-note" contenteditable="true" data-placeholder="メモを追加…">4/24~30 継続希望の方は何もする必要はないよ。もし退会したい人は4/30までにチケット切って連絡してね。5/1以降は受け付けないよ。</div><div class="task-footer"><div class="cat-badge badge-recruit" onclick="cycleBadge(this)">集客・認知</div><div class="assignee-add" onclick="addAssignee(this)">＋ 担当</div></div></div><button class="add-task-btn" onclick="openForm('phase2')">＋ タスクを追加</button>
       <div id="add-form-phase2" class="add-form">
         <input id="new-title-phase2" type="text" placeholder="タスク名">
         <textarea id="new-note-phase2" placeholder="メモ"></textarea>
@@ -905,6 +905,12 @@ body { font-family: var(--font-sans, sans-serif); }
   <div class="phase ph-final">
     <div class="phase-header" contenteditable="true">🚀 直前（5月）</div>
     <div class="phase-body" id="phase3">
+      
+      
+      
+      
+      
+      
       <div class="task-card cat-recruit" data-id="t10">
         <div class="drag-handle"><span></span><span></span><span></span></div>
         <div class="task-delete" onclick="deleteTask(this)">×</div>
@@ -914,8 +920,7 @@ body { font-family: var(--font-sans, sans-serif); }
         </div>
         <div class="task-note" contenteditable="true" data-placeholder="メモを追加…">実績・受講者の声・Q&amp;Aを入れ込む</div>
         <div class="task-footer"><div class="cat-badge badge-recruit" onclick="cycleBadge(this)">集客・認知</div><div class="assignee-add" onclick="addAssignee(this)">＋ 担当</div></div>
-      </div>
-      <div class="task-card cat-sns" data-id="t11">
+      </div><div class="task-card cat-sns" data-id="t11">
         <div class="drag-handle"><span></span><span></span><span></span></div>
         <div class="task-delete" onclick="deleteTask(this)">×</div>
         <div class="task-top">
@@ -924,8 +929,7 @@ body { font-family: var(--font-sans, sans-serif); }
         </div>
         <div class="task-note" contenteditable="true" data-placeholder="メモを追加…">あと◯日・残席◯席の演出で緊急性をつくる</div>
         <div class="task-footer"><div class="cat-badge badge-sns" onclick="cycleBadge(this)">SNS発信</div><div class="assignee-add" onclick="addAssignee(this)">＋ 担当</div></div>
-      </div>
-      <div class="task-card cat-content" data-id="t12">
+      </div><div class="task-card cat-content" data-id="t12">
         <div class="drag-handle"><span></span><span></span><span></span></div>
         <div class="task-delete" onclick="deleteTask(this)">×</div>
         <div class="task-top">
@@ -934,8 +938,7 @@ body { font-family: var(--font-sans, sans-serif); }
         </div>
         <div class="task-note" contenteditable="true" data-placeholder="メモを追加…">早期申込特典や限定資料で背中を押す</div>
         <div class="task-footer"><div class="cat-badge badge-content" onclick="cycleBadge(this)">コンテンツ</div><div class="assignee-add" onclick="addAssignee(this)">＋ 担当</div></div>
-      </div>
-      <div class="task-card cat-recruit" data-id="t13">
+      </div><div class="task-card cat-recruit" data-id="t13">
         <div class="drag-handle"><span></span><span></span><span></span></div>
         <div class="task-delete" onclick="deleteTask(this)">×</div>
         <div class="task-top">
@@ -944,8 +947,7 @@ body { font-family: var(--font-sans, sans-serif); }
         </div>
         <div class="task-note" contenteditable="true" data-placeholder="メモを追加…">公式募集の24〜48時間前に先行案内</div>
         <div class="task-footer"><div class="cat-badge badge-recruit" onclick="cycleBadge(this)">集客・認知</div><div class="assignee-add" onclick="addAssignee(this)">＋ 担当</div></div>
-      </div>
-      <div class="task-card cat-workshop" data-id="t14">
+      </div><div class="task-card cat-workshop" data-id="t14">
         <div class="drag-handle"><span></span><span></span><span></span></div>
         <div class="task-delete" onclick="deleteTask(this)">×</div>
         <div class="task-top">
@@ -954,8 +956,7 @@ body { font-family: var(--font-sans, sans-serif); }
         </div>
         <div class="task-note" contenteditable="true" data-placeholder="メモを追加…">4期募集に効果的に活用。「次は入学してさらに深めよう」の導線に</div>
         <div class="task-footer"><div class="cat-badge badge-workshop" onclick="cycleBadge(this)">リアル講座</div><div class="assignee-add" onclick="addAssignee(this)">＋ 担当</div></div>
-      </div>
-      <div class="task-card cat-sns" data-id="t15">
+      </div><div class="task-card cat-sns" data-id="t15">
         <div class="drag-handle"><span></span><span></span><span></span></div>
         <div class="task-delete" onclick="deleteTask(this)">×</div>
         <div class="task-top">
@@ -964,8 +965,7 @@ body { font-family: var(--font-sans, sans-serif); }
         </div>
         <div class="task-note" contenteditable="true" data-placeholder="メモを追加…">全チャネルで同時配信。DM・コメント対応も準備</div>
         <div class="task-footer"><div class="cat-badge badge-sns" onclick="cycleBadge(this)">SNS発信</div><div class="assignee-add" onclick="addAssignee(this)">＋ 担当</div></div>
-      </div>
-      <button class="add-task-btn" onclick="openForm('phase3')">＋ タスクを追加</button>
+      </div><button class="add-task-btn" onclick="openForm('phase3')">＋ タスクを追加</button>
       <div id="add-form-phase3" class="add-form">
         <input id="new-title-phase3" type="text" placeholder="タスク名">
         <textarea id="new-note-phase3" placeholder="メモ"></textarea>
